@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Highscores;
 use Illuminate\Http\Request;
 use App\Http\Requests\MainRequest;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
@@ -34,17 +35,32 @@ class IndexController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MainRequest $request)
+    public function store(Request $request)
     {
+
+        if( ! preg_match('/a\!\@fd\d+\[/', $request->score, $matches))
+            return false;
+
+        if( ! preg_match('/\d+/',$matches[0], $score))
+            return false;
+     
+        $score_ = (int) $score[0];
+
+
         $highscores = new Highscores();
 
-        $user = $highscores->where('user_id', $request->user_id)->first();
+        $user_id = Auth::user()->id;
 
-        if($user == null)
-            return $highscores->create($request->all());
+        $user = $highscores->where('user_id', $user_id)->first();
 
-        if($user->score < $request->score)
-            return $user->update(['score' => $request->score]);
+        if ($user == null) {
+            return $highscores->create([
+                'user_id' => $user_id,
+                'score'   => $score_
+            ]);
+        }
+        if($user->score < $score_)
+            return $user->update(['score' => $score_]);
 
     }
 

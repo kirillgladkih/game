@@ -24,8 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $csrf = csrf_token();
+
         $data = Highscores::all()->sortByDesc('score');
 
-        return view('home', compact('data'));
+        return view('home', compact('data','csrf'));
     }
 }

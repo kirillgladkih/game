@@ -4,6 +4,7 @@
 <li class="nav-item">
     <a class="nav-link" href="{{ route('home.index') }}">{{ __('В меню') }}</a>
 </li>
+
 @endsection
    
 @section('content')
